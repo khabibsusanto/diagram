@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagram Batang - MTs Ma'arif Jumo</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .bar-animate { transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .tab-active { background: #1e3a5f; color: white; }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .quiz-option:hover { transform: scale(1.02); }
+    .quiz-option { transition: all 0.2s ease; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);"><!-- Header -->
+   <header class="text-center py-6 px-4">
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full mb-3"><i data-lucide="school" style="width:16px;height:16px;color:#7dd3fc;"></i> <span id="schoolName" class="text-sky-200 text-sm font-medium">MTs Ma'arif Jumo</span>
+    </div>
+    <h1 id="mainTitle" class="text-3xl md:text-4xl font-800 text-white tracking-tight">Diagram Batang</h1>
+    <p class="text-sky-300 mt-2 text-sm">Matematika Kelas VII • Penyajian Data</p>
+   </header><!-- Navigation Tabs -->
+   <nav class="flex justify-center px-4 mb-6">
+    <div class="flex bg-white/10 backdrop-blur rounded-xl p-1 gap-1 flex-wrap justify-center"><button onclick="showSection('materi')" id="tab-materi" class="tab-btn tab-active px-4 py-2 rounded-lg text-sm font-semibold transition-all"> <i data-lucide="book-open" style="width:14px;height:14px;display:inline;vertical-align:-2px;"></i> Materi </button> <button onclick="showSection('praktik')" id="tab-praktik" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-white/70 transition-all"> <i data-lucide="bar-chart-2" style="width:14px;height:14px;display:inline;vertical-align:-2px;"></i> Praktik </button> <button onclick="showSection('kuis')" id="tab-kuis" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-white/70 transition-all"> <i data-lucide="help-circle" style="width:14px;height:14px;display:inline;vertical-align:-2px;"></i> Kuis </button>
+    </div>
+   </nav><!-- Content Sections -->
+   <main class="max-w-4xl mx-auto px-4 pb-10"><!-- MATERI -->
+    <section id="sec-materi" class="fade-in">
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-6 md:p-8 text-white space-y-6">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="info" style="width:20px;height:20px;color:#7dd3fc;"></i> Pengertian Diagram Batang</h2>
+      <p class="text-white/80 leading-relaxed">Diagram batang adalah cara menyajikan data dalam bentuk batang-batang tegak atau mendatar. Panjang atau tinggi batang menunjukkan banyaknya data (frekuensi) pada setiap kategori.</p>
+      <div class="grid md:grid-cols-2 gap-4">
+       <div class="bg-white/10 rounded-xl p-4">
+        <h3 class="font-bold text-sky-300 mb-2"><i data-lucide="check-circle" style="width:16px;height:16px;display:inline;vertical-align:-2px;"></i> Ciri-ciri</h3>
+        <ul class="text-sm text-white/80 space-y-1 list-disc list-inside">
+         <li>Memiliki sumbu X (kategori) dan sumbu Y (frekuensi)</li>
+         <li>Setiap batang memiliki lebar yang sama</li>
+         <li>Jarak antar batang sama</li>
+         <li>Tinggi batang sesuai frekuensi data</li>
+        </ul>
+       </div>
+       <div class="bg-white/10 rounded-xl p-4">
+        <h3 class="font-bold text-sky-300 mb-2"><i data-lucide="target" style="width:16px;height:16px;display:inline;vertical-align:-2px;"></i> Kegunaan</h3>
+        <ul class="text-sm text-white/80 space-y-1 list-disc list-inside">
+         <li>Membandingkan data antar kategori</li>
+         <li>Melihat kategori tertinggi/terendah</li>
+         <li>Menyajikan data agar mudah dibaca</li>
+         <li>Menampilkan perubahan data</li>
+        </ul>
+       </div>
+      </div>
+      <div class="bg-sky-900/40 rounded-xl p-4 border border-sky-400/30">
+       <h3 class="font-bold text-sky-200 mb-2"><i data-lucide="lightbulb" style="width:16px;height:16px;display:inline;vertical-align:-2px;"></i> Langkah Membuat Diagram Batang</h3>
+       <ol class="text-sm text-white/80 space-y-1 list-decimal list-inside">
+        <li>Kumpulkan dan kelompokkan data</li>
+        <li>Tentukan skala pada sumbu Y</li>
+        <li>Gambar sumbu X (kategori) dan sumbu Y (frekuensi)</li>
+        <li>Gambar batang sesuai frekuensi masing-masing</li>
+        <li>Beri judul dan keterangan diagram</li>
+       </ol>
+      </div>
+     </div>
+    </section><!-- PRAKTIK -->
+    <section id="sec-praktik" class="fade-in hidden">
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-6 md:p-8 text-white space-y-6">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="bar-chart-2" style="width:20px;height:20px;color:#7dd3fc;"></i> Buat Diagram Batangmu!</h2>
+      <p class="text-white/80 text-sm">Masukkan data di bawah ini, lalu lihat diagram batang yang terbentuk.</p>
+      <div class="bg-white/10 rounded-xl p-4">
+       <p class="text-xs text-sky-300 font-semibold mb-3">DATA BUAH FAVORIT SISWA</p>
+       <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="inputGrid"></div>
+      </div><!-- Chart Display -->
+      <div class="bg-white/5 rounded-xl p-4">
+       <p class="text-center text-xs text-sky-300 font-semibold mb-4">DIAGRAM BATANG</p>
+       <div class="flex items-end justify-center gap-3 md:gap-6" style="height: 200px;" id="chartArea"></div>
+       <div class="flex justify-center gap-3 md:gap-6 mt-2" id="chartLabels"></div>
+      </div><button onclick="resetData()" class="bg-sky-600 hover:bg-sky-500 px-4 py-2 rounded-lg text-sm font-semibold transition-all"> <i data-lucide="refresh-cw" style="width:14px;height:14px;display:inline;vertical-align:-2px;"></i> Reset Data </button>
+     </div>
+    </section><!-- KUIS -->
+    <section id="sec-kuis" class="fade-in hidden">
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-6 md:p-8 text-white space-y-6">
+      <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="help-circle" style="width:20px;height:20px;color:#7dd3fc;"></i> Kuis Interaktif</h2>
+      <div id="quizContainer"></div>
+      <div id="quizResult" class="hidden text-center py-6">
+       <div class="text-5xl mb-3">
+        🎉
+       </div>
+       <p class="text-2xl font-bold" id="scoreText"></p><button onclick="startQuiz()" class="mt-4 bg-sky-600 hover:bg-sky-500 px-5 py-2 rounded-lg text-sm font-semibold transition-all">Ulangi Kuis</button>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+  // Data
+  const fruits = ['🍎 Apel','🍊 Jeruk','🍇 Anggur','🍌 Pisang','🥭 Mangga'];
+  let values = [8, 12, 5, 10, 7];
+  const barColors = ['#ef4444','#f97316','#8b5cf6','#eab308','#22c55e'];
+
+  // Quiz data
+  const questions = [
+    { q: 'Diagram batang menggunakan ... untuk menyajikan data.', opts: ['Batang-batang','Lingkaran','Titik-titik','Garis'], ans: 0 },
+    { q: 'Sumbu Y pada diagram batang menunjukkan...', opts: ['Kategori','Frekuensi','Waktu','Nama'], ans: 1 },
+    { q: 'Jika batang A lebih tinggi dari batang B, artinya...', opts: ['A lebih sedikit','A dan B sama','A lebih banyak','Tidak bisa ditentukan'], ans: 2 },
+    { q: 'Ciri diagram batang yang benar adalah...', opts: ['Lebar batang berbeda-beda','Lebar batang sama','Tidak ada sumbu','Batang saling menempel'], ans: 1 },
+    { q: 'Data berikut yang PALING TEPAT disajikan dengan diagram batang adalah...', opts: ['Suhu per jam','Buah favorit siswa','Persentase pengeluaran','Hubungan tinggi dan berat'], ans: 1 }
+  ];
+  let currentQ = 0, score = 0;
+
+  // Init chart inputs
+  function initPraktik() {
+    const grid = document.getElementById('inputGrid');
+    grid.innerHTML = '';
+    fruits.forEach((f, i) => {
+      grid.innerHTML += `<div class="text-center"><label class="text-xs text-white/70 block mb-1">${f}</label><input type="number" min="0" max="30" value="${values[i]}" onchange="updateChart(${i}, this.value)" class="w-full bg-white/20 border border-white/20 rounded-lg px-2 py-1.5 text-center text-white text-sm focus:outline-none focus:border-sky-400"></div>`;
+    });
+    renderChart();
+  }
+
+  function updateChart(idx, val) {
+    values[idx] = Math.max(0, Math.min(30, parseInt(val) || 0));
+    renderChart();
+  }
+
+  function renderChart() {
+    const max = Math.max(...values, 1);
+    const area = document.getElementById('chartArea');
+    const labels = document.getElementById('chartLabels');
+    area.innerHTML = '';
+    labels.innerHTML = '';
+    values.forEach((v, i) => {
+      const h = (v / max) * 100;
+      area.innerHTML += `<div class="flex flex-col items-center justify-end h-full"><span class="text-xs text-white font-bold mb-1">${v}</span><div class="bar-animate rounded-t-md w-8 md:w-12" style="height:${h}%;background:${barColors[i]};"></div></div>`;
+      labels.innerHTML += `<span class="text-xs text-white/70 w-8 md:w-12 text-center">${fruits[i].split(' ')[0]}</span>`;
+    });
+  }
+
+  function resetData() {
+    values = [8, 12, 5, 10, 7];
+    initPraktik();
+  }
+
+  // Quiz
+  function startQuiz() {
+    currentQ = 0; score = 0;
+    document.getElementById('quizResult').classList.add('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const container = document.getElementById('quizContainer');
+    container.classList.remove('hidden');
+    const q = questions[currentQ];
+    container.innerHTML = `
+      <p class="text-xs text-sky-300 font-semibold mb-2">Soal ${currentQ+1} dari ${questions.length}</p>
+      <p class="font-semibold mb-4">${q.q}</p>
+      <div class="space-y-2">${q.opts.map((o,i) => `<button onclick="answer(${i})" class="quiz-option w-full text-left bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl px-4 py-3 text-sm">${o}</button>`).join('')}</div>
+    `;
+  }
+
+  function answer(idx) {
+    if (idx === questions[currentQ].ans) score++;
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      document.getElementById('quizContainer').classList.add('hidden');
+      document.getElementById('quizResult').classList.remove('hidden');
+      document.getElementById('scoreText').textContent = `Skor: ${score}/${questions.length}`;
+    }
+  }
+
+  // Sections
+  function showSection(name) {
+    ['materi','praktik','kuis'].forEach(s => {
+      document.getElementById('sec-'+s).classList.toggle('hidden', s!==name);
+      const tab = document.getElementById('tab-'+s);
+      tab.classList.toggle('tab-active', s===name);
+      tab.classList.toggle('text-white/70', s!==name);
+    });
+    if (name === 'praktik') initPraktik();
+    if (name === 'kuis') startQuiz();
+  }
+
+  // Element SDK
+  const defaultConfig = {
+    school_name: 'MTs Ma\'arif Jumo',
+    main_title: 'Diagram Batang',
+    background_color: '#0f2027',
+    surface_color: '#1e3a5f',
+    text_color: '#ffffff',
+    primary_action_color: '#0284c7',
+    secondary_action_color: '#7dd3fc',
+    font_family: 'Plus Jakarta Sans',
+    font_size: 16
+  };
+
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      document.getElementById('schoolName').textContent = config.school_name || defaultConfig.school_name;
+      document.getElementById('mainTitle').textContent = config.main_title || defaultConfig.main_title;
+      const font = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${font}, sans-serif`;
+      const size = config.font_size || defaultConfig.font_size;
+      document.body.style.fontSize = size + 'px';
+    },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }},
+        { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }},
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }},
+        { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }},
+        { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }}
+      ],
+      borderables: [],
+      fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }},
+      fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }}
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['school_name', config.school_name || defaultConfig.school_name],
+      ['main_title', config.main_title || defaultConfig.main_title]
+    ])
+  });
+
+  lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f63bb2443dff91c',t:'MTc3Nzg1ODEzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

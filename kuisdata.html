@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis HOTS Penyajian Data - MTs Ma'arif Jumo</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .tab-active { background: #1e3a5f; color: white; }
+    .fade-in { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .quiz-option { transition: all 0.3s ease; cursor: pointer; }
+    .quiz-option:hover { transform: translateX(4px); background: rgba(255, 255, 255, 0.15) !important; }
+    .quiz-option.selected { background: rgba(2, 132, 199, 0.3) !important; border: 2px solid #0284c7 !important; }
+    .quiz-option.correct { background: rgba(34, 197, 94, 0.3) !important; border: 2px solid #22c55e !important; }
+    .quiz-option.incorrect { background: rgba(239, 68, 68, 0.3) !important; border: 2px solid #ef4444 !important; }
+    .checkbox-option { accent-color: #0284c7; cursor: pointer; }
+    .progress-bar { background: linear-gradient(90deg, #0284c7, #06b6d4); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);"><!-- Header -->
+   <header class="text-center py-6 px-4 border-b border-white/10">
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full mb-3"><i data-lucide="school" style="width:16px;height:16px;color:#7dd3fc;"></i> <span id="schoolName" class="text-sky-200 text-sm font-medium">MTs Ma'arif Jumo</span>
+    </div>
+    <h1 id="mainTitle" class="text-3xl md:text-4xl font-800 text-white tracking-tight">Kuis HOTS Penyajian Data</h1>
+    <p class="text-sky-300 mt-2 text-sm">Matematika Kelas VII • 15 Soal Level HOTS</p>
+   </header><!-- Main Content -->
+   <main class="max-w-5xl mx-auto px-4 py-8 pb-16"><!-- Quiz Container -->
+    <div id="quizStartScreen" class="fade-in">
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-8 text-white text-center space-y-6">
+      <div class="text-6xl">
+       📊
+      </div>
+      <h2 class="text-2xl font-bold">Siap Mengerjakan Kuis?</h2>
+      <p class="text-white/80 max-w-2xl mx-auto">Kuis ini berisi 15 soal pilihan ganda dan pilihan ganda kompleks tentang penyajian data tunggal, diagram batang, dan diagram lingkaran. Kerjakan dengan teliti!</p>
+      <div class="grid md:grid-cols-3 gap-4 py-4">
+       <div class="bg-white/5 rounded-lg p-4">
+        <div class="text-3xl font-bold text-sky-400">
+         15
+        </div>
+        <p class="text-sm text-white/70">Total Soal</p>
+       </div>
+       <div class="bg-white/5 rounded-lg p-4">
+        <div class="text-3xl font-bold text-sky-400">
+         45
+        </div>
+        <p class="text-sm text-white/70">Menit (Max)</p>
+       </div>
+       <div class="bg-white/5 rounded-lg p-4">
+        <div class="text-3xl font-bold text-sky-400">
+         ⭐
+        </div>
+        <p class="text-sm text-white/70">Level HOTS</p>
+       </div>
+      </div><button onclick="startQuiz()" class="bg-sky-600 hover:bg-sky-500 px-6 py-3 rounded-lg text-sm font-bold transition-all inline-flex items-center gap-2"> <i data-lucide="play" style="width:18px;height:18px;"></i> Mulai Kuis </button>
+     </div>
+    </div><!-- Quiz Question Screen -->
+    <div id="quizQuestionScreen" class="fade-in hidden"><!-- Progress Bar -->
+     <div class="mb-6">
+      <div class="flex justify-between items-center mb-2"><span class="text-sky-300 text-sm font-semibold">Soal <span id="currentQNum">1</span> dari 15</span> <span class="text-white/70 text-sm" id="scoreIndicator">Skor: 0</span>
+      </div>
+      <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+       <div id="progressBar" class="progress-bar h-full transition-all duration-300" style="width: 0%;"></div>
+      </div>
+     </div><!-- Question Card -->
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-6 md:p-8 text-white mb-6">
+      <h2 id="questionText" class="text-lg md:text-xl font-bold mb-6 leading-relaxed"></h2><!-- Question Content (untuk soal dengan gambar/data) -->
+      <div id="questionContent" class="mb-6 p-4 bg-white/5 rounded-lg"></div><!-- Options Container -->
+      <div id="optionsContainer" class="space-y-3"></div><!-- Action Buttons -->
+      <div class="flex gap-3 mt-8 pt-6 border-t border-white/10"><button id="btnPrevious" onclick="previousQuestion()" class="flex-1 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm font-semibold transition-all inline-flex items-center justify-center gap-2"> <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Sebelumnya </button> <button id="btnNext" onclick="nextQuestion()" class="flex-1 bg-sky-600 hover:bg-sky-500 px-4 py-2 rounded-lg text-sm font-semibold transition-all inline-flex items-center justify-center gap-2"> Selanjutnya <i data-lucide="chevron-right" style="width:16px;height:16px;"></i> </button>
+      </div>
+     </div>
+    </div><!-- Quiz Result Screen -->
+    <div id="quizResultScreen" class="fade-in hidden">
+     <div class="bg-white/10 backdrop-blur rounded-2xl p-8 text-white text-center space-y-6">
+      <div id="resultIcon" class="text-6xl">
+       🎉
+      </div>
+      <h2 class="text-2xl font-bold">Kuis Selesai!</h2>
+      <div class="bg-white/5 rounded-xl p-6 space-y-4">
+       <div>
+        <div class="text-5xl font-bold text-sky-400" id="finalScore">
+         0
+        </div>
+        <p class="text-white/70 text-sm">dari 15 soal</p>
+       </div>
+       <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+        <div id="finalProgressBar" class="progress-bar h-full" style="width: 0%;"></div>
+       </div>
+       <p id="resultMessage" class="text-lg font-semibold"></p>
+      </div>
+      <div id="resultDetails" class="space-y-3 text-left"></div><!-- Certificate Section -->
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-8 text-white space-y-6 mt-6">
+       <div class="text-center">
+        <h3 class="text-2xl font-bold mb-4">📜 Dapatkan Piagam Anda</h3>
+        <p class="text-white/70 text-sm mb-4">Masukkan nama Anda untuk menerima sertifikat penghargaan</p>
+       </div>
+       <div class="space-y-3">
+        <input type="text" id="studentName" placeholder="Masukkan nama lengkap Anda..." class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-sky-400 focus:bg-white/20">
+       </div><button onclick="showCertificate()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 px-6 py-3 rounded-lg text-sm font-bold transition-all text-gray-900 inline-flex items-center justify-center gap-2"> <i data-lucide="download" style="width:18px;height:18px;"></i> Lihat Piagam </button>
+      </div><button onclick="startQuiz()" class="bg-sky-600 hover:bg-sky-500 px-6 py-3 rounded-lg text-sm font-bold transition-all inline-flex items-center gap-2 w-full justify-center mt-4"> <i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> Ulangi Kuis </button>
+     </div>
+    </div><!-- Certificate Modal -->
+    <div id="certificateModal" class="fixed inset-0 hidden bg-black/50 backdrop-blur flex items-center justify-center p-4 z-50">
+     <div class="bg-white rounded-2xl p-0 max-w-2xl w-full" style="max-height: 90vh; overflow-y: auto;">
+      <div id="certificateContent" class="space-y-4 p-8">
+       <!-- Certificate will be rendered here -->
+      </div>
+      <div class="flex gap-3 p-6 border-t sticky bottom-0 bg-white">
+       <button onclick="printCertificate()" class="flex-1 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-sm font-semibold text-white inline-flex items-center justify-center gap-2"> <i data-lucide="printer" style="width:16px;height:16px;"></i> Cetak </button> <button onclick="downloadCertificate()" class="flex-1 bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg text-sm font-semibold text-white inline-flex items-center justify-center gap-2"> <i data-lucide="download" style="width:16px;height:16px;"></i> Unduh </button> <button onclick="closeCertificate()" class="flex-1 bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-lg text-sm font-semibold text-white inline-flex items-center justify-center gap-2"> <i data-lucide="x" style="width:16px;height:16px;"></i> Tutup </button>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+  // Quiz Data - 15 HOTS Questions
+  const quizQuestions = [
+    {
+      type: 'single',
+      q: 'Perhatikan data nilai ulangan matematika: 7, 8, 8, 9, 7, 8, 10, 9, 8, 7. Modus dari data tersebut adalah...',
+      opts: ['7', '8', '9', '10'],
+      ans: 1,
+      materi: 'Penyajian Data Tunggal'
+    },
+    {
+      type: 'single',
+      q: 'Dalam sebuah diagram batang menunjukkan penjualan barang selama 5 hari dengan total 150 unit. Jika hari Senin, Selasa, Rabu, dan Kamis masing-masing terjual 25, 35, 30, dan 40 unit, berapa unit yang terjual pada hari Jumat?',
+      opts: ['20 unit', '25 unit', '30 unit', '40 unit'],
+      ans: 0,
+      materi: 'Diagram Batang'
+    },
+    {
+      type: 'single',
+      q: 'Diagram lingkaran menunjukkan hobi 360 siswa. Jika juring untuk hobi membaca berukuran 120°, berapa banyak siswa yang hobinya membaca?',
+      opts: ['60 siswa', '90 siswa', '100 siswa', '120 siswa'],
+      ans: 1,
+      materi: 'Diagram Lingkaran'
+    },
+    {
+      type: 'complex',
+      q: 'Berikut data tingkat kepuasan pelanggan terhadap layanan (dalam persen): Sangat Puas 45%, Puas 35%, Netral 15%, Tidak Puas 5%. Pernyataan yang benar adalah:',
+      opts: [
+        'Pelanggan yang puas lebih banyak dari yang sangat puas',
+        'Pelanggan netral dan tidak puas berjumlah 20%',
+        'Sebagian besar pelanggan merasa tidak puas',
+        'Tidak ada pelanggan yang sangat puas'
+      ],
+      ans: [1],
+      materi: 'Analisis Data'
+    },
+    {
+      type: 'single',
+      q: 'Median dari data: 12, 15, 18, 20, 22, 25, 28 adalah...',
+      opts: ['18', '20', '22', '25'],
+      ans: 0,
+      materi: 'Penyajian Data Tunggal'
+    },
+    {
+      type: 'single',
+      q: 'Diagram batang menunjukkan tinggi pemain basket (dalam cm). Jika skala horizontal adalah 1 kotak = 5 cm dan batang untuk pemain A setinggi 12 kotak, berapa tinggi pemain A?',
+      opts: ['50 cm', '55 cm', '60 cm', '65 cm'],
+      ans: 2,
+      materi: 'Diagram Batang'
+    },
+    {
+      type: 'complex',
+      q: 'Perhatikan diagram lingkaran tentang penggunaan waktu dalam sehari (24 jam). Tidur 8 jam, Sekolah 7 jam, Bermain 6 jam, Makan 1 jam, Istirahat 2 jam. Pernyataan yang SALAH adalah:',
+      opts: [
+        'Sudut juring tidur adalah 120°',
+        'Sudut juring bermain adalah 90°',
+        'Sudut juring sekolah adalah 105°',
+        'Sudut juring makan adalah 15°'
+      ],
+      ans: [0],
+      materi: 'Diagram Lingkaran'
+    },
+    {
+      type: 'single',
+      q: 'Rata-rata (mean) dari data: 5, 7, 9, 11, 13 adalah...',
+      opts: ['8', '8.5', '9', '9.5'],
+      ans: 2,
+      materi: 'Penyajian Data Tunggal'
+    },
+    {
+      type: 'single',
+      q: 'Diagram batang menunjukkan jumlah pengunjung taman hiburan selama 4 hari. Jika rata-rata pengunjung 125 orang, dan 3 hari pertama masing-masing 100, 120, dan 150 orang, berapa pengunjung pada hari ke-4?',
+      opts: ['120 orang', '125 orang', '130 orang', '135 orang'],
+      ans: 2,
+      materi: 'Diagram Batang'
+    },
+    {
+      type: 'complex',
+      q: 'Dalam diagram lingkaran tentang preferensi olahraga dari 400 siswa: Sepak bola 35%, Bola basket 25%, Bulu tangkis 20%, Lainnya 20%. Berapa siswa yang memilih sepak bola atau bulu tangkis?',
+      opts: [
+        '140 siswa',
+        '200 siswa',
+        '220 siswa',
+        '240 siswa'
+      ],
+      ans: [2],
+      materi: 'Diagram Lingkaran'
+    },
+    {
+      type: 'single',
+      q: 'Data nilai ujian: 6, 7, 7, 8, 8, 8, 9, 9, 10. Jangkauan (range) dari data tersebut adalah...',
+      opts: ['3', '4', '5', '6'],
+      ans: 0,
+      materi: 'Penyajian Data Tunggal'
+    },
+    {
+      type: 'single',
+      q: 'Diagram batang menunjukkan produksi buah (dalam ton) selama 5 bulan: Januari 20, Februari 30, Maret 25, April 35, Mei 40. Bulan apa yang memiliki peningkatan terbesar dibanding bulan sebelumnya?',
+      opts: ['Februari', 'Maret', 'April', 'Mei'],
+      ans: 3,
+      materi: 'Diagram Batang'
+    },
+    {
+      type: 'complex',
+      q: 'Perhatikan diagram lingkaran tentang jenis pekerjaan dari 720 masyarakat. PNS 25%, Wiraswasta 30%, Petani 35%, Pengangguran 10%. Pernyataan BENAR adalah:',
+      opts: [
+        'Wiraswasta lebih banyak dari PNS sebanyak 30 orang',
+        'Petani berjumlah 252 orang',
+        'Wiraswasta dan PNS berjumlah 400 orang',
+        'Pengangguran berjumlah 72 orang'
+      ],
+      ans: [2],
+      materi: 'Diagram Lingkaran'
+    },
+    {
+      type: 'single',
+      q: 'Diagram batang menunjukkan penjualan mobil per minggu selama 4 minggu: 20, 25, 30, 35 unit. Persentase kenaikan penjualan dari minggu 1 ke minggu 4 adalah...',
+      opts: ['50%', '75%', '100%', '150%'],
+      ans: 2,
+      materi: 'Diagram Batang'
+    },
+    {
+      type: 'complex',
+      q: 'Data pengunjung museum selama 7 hari: 150, 200, 180, 220, 210, 240, 200 orang. Modus dan median dari data adalah...',
+      opts: [
+        'Modus 200, Median 180',
+        'Modus 200, Median 210',
+        'Modus 210, Median 200',
+        'Modus 220, Median 210'
+      ],
+      ans: [1],
+      materi: 'Penyajian Data Tunggal'
+    },
+    {
+      type: 'single',
+      q: 'Dalam diagram lingkaran, jika persentase bagian tertentu adalah 22,5%, maka besar sudut juring tersebut adalah...',
+      opts: ['60°', '70°', '80°', '81°'],
+      ans: 3,
+      materi: 'Diagram Lingkaran'
+    }
+  ];
+
+  let currentQuestion = 0;
+  let userAnswers = new Array(quizQuestions.length).fill(null);
+  let score = 0;
+
+  function startQuiz() {
+    currentQuestion = 0;
+    userAnswers = new Array(quizQuestions.length).fill(null);
+    score = 0;
+    document.getElementById('quizStartScreen').classList.add('hidden');
+    document.getElementById('quizQuestionScreen').classList.remove('hidden');
+    document.getElementById('quizResultScreen').classList.add('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizQuestions[currentQuestion];
+    document.getElementById('currentQNum').textContent = currentQuestion + 1;
+    document.getElementById('questionText').textContent = q.q;
+    document.getElementById('progressBar').style.width = ((currentQuestion + 1) / 15 * 100) + '%';
+    
+    // Clear content area
+    document.getElementById('questionContent').innerHTML = '';
+
+    // Render options
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+
+    if (q.type === 'single') {
+      q.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option w-full text-left bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm';
+        btn.textContent = opt;
+        btn.onclick = () => selectAnswer(idx);
+        if (userAnswers[currentQuestion] === idx) {
+          btn.classList.add('selected');
+        }
+        container.appendChild(btn);
+      });
+    } else {
+      // Complex type - checkboxes
+      q.opts.forEach((opt, idx) => {
+        const label = document.createElement('label');
+        label.className = 'quiz-option w-full text-left bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm flex items-start gap-3 cursor-pointer';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'checkbox-option mt-1';
+        checkbox.checked = userAnswers[currentQuestion]?.includes(idx) || false;
+        checkbox.onchange = () => selectComplexAnswer();
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(opt));
+        container.appendChild(label);
+      });
+    }
+
+    // Update button states
+    document.getElementById('btnPrevious').disabled = currentQuestion === 0;
+    document.getElementById('btnPrevious').style.opacity = currentQuestion === 0 ? '0.5' : '1';
+    document.getElementById('btnNext').textContent = currentQuestion === 14 
+      ? 'Selesai' 
+      : 'Selanjutnya';
+  }
+
+  function selectAnswer(idx) {
+    userAnswers[currentQuestion] = idx;
+    renderQuestion();
+  }
+
+  function selectComplexAnswer() {
+    const checkboxes = document.querySelectorAll('.checkbox-option');
+    const selected = [];
+    checkboxes.forEach((cb, idx) => {
+      if (cb.checked) selected.push(idx);
+    });
+    userAnswers[currentQuestion] = selected.length > 0 ? selected : null;
+  }
+
+  function nextQuestion() {
+    if (currentQuestion < 14) {
+      currentQuestion++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  function previousQuestion() {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      renderQuestion();
+    }
+  }
+
+  function finishQuiz() {
+    score = 0;
+    quizQuestions.forEach((q, idx) => {
+      if (q.type === 'single') {
+        if (userAnswers[idx] === q.ans) score++;
+      } else {
+        if (JSON.stringify(userAnswers[idx]?.sort()) === JSON.stringify(q.ans.sort())) {
+          score++;
+        }
+      }
+    });
+
+    document.getElementById('quizQuestionScreen').classList.add('hidden');
+    document.getElementById('quizResultScreen').classList.remove('hidden');
+    
+    const percent = Math.round((score / 15) * 100);
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('finalProgressBar').style.width = percent + '%';
+
+    let message = '';
+    let icon = '';
+    if (score >= 13) {
+      message = '🌟 Sempurna! Kamu menguasai penyajian data!';
+      icon = '⭐';
+    } else if (score >= 10) {
+      message = '👏 Bagus! Pemahaman mu sangat baik!';
+      icon = '👏';
+    } else if (score >= 7) {
+      message = '😊 Cukup baik! Terus belajar ya!';
+      icon = '😊';
+    } else {
+      message = '📚 Perlu belajar lebih giat lagi!';
+      icon = '📚';
+    }
+
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultMessage').textContent = message;
+
+    // Show detail
+    let detail = '<div class="text-center text-sm">';
+    detail += '<p class="text-white/70 mb-2">Rincian Jawaban:</p>';
+    detail += '<div class="text-white/80">';
+    let correct = 0, wrong = 0;
+    quizQuestions.forEach((q, idx) => {
+      const isCorrect = q.type === 'single' 
+        ? userAnswers[idx] === q.ans
+        : JSON.stringify(userAnswers[idx]?.sort()) === JSON.stringify(q.ans.sort());
+      if (isCorrect) correct++;
+      else wrong++;
+    });
+    detail += `✓ Benar: ${correct} soal<br>`;
+    detail += `✗ Salah: ${wrong} soal<br>`;
+    detail += `📊 Nilai: ${Math.round((score / 15) * 100)}`;
+    detail += '</div></div>';
+    document.getElementById('resultDetails').innerHTML = detail;
+  }
+
+  function showCertificate() {
+    const name = document.getElementById('studentName').value.trim();
+    if (!name) {
+      alert('Silakan masukkan nama Anda terlebih dahulu');
+      return;
+    }
+
+    const percent = Math.round((score / 15) * 100);
+    const date = new Date().toLocaleDateString('id-ID', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
+    const certificateHTML = `
+      <div style="text-align: center; border: 8px solid #d4a574; padding: 40px; background: linear-gradient(135deg, #fffacd 0%, #ffe4b5 100%); position: relative;">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400&display=swap');
+          .certificate-title { font-family: 'Playfair Display', serif; font-size: 48px; color: #8b4513; margin: 20px 0; }
+          .certificate-subtitle { font-family: 'Crimson Text', serif; font-size: 24px; color: #666; }
+          .certificate-name { font-family: 'Playfair Display', serif; font-size: 36px; color: #2c5f7c; margin: 30px 0; text-decoration: underline; }
+          .certificate-text { font-family: 'Crimson Text', serif; font-size: 18px; color: #333; line-height: 1.8; margin: 15px 0; }
+          .certificate-score { font-family: 'Playfair Display', serif; font-size: 28px; color: #d4a574; margin: 20px 0; }
+          .certificate-footer { font-family: 'Crimson Text', serif; font-size: 14px; color: #666; margin-top: 30px; }
+          .seal { font-size: 60px; margin: 20px 0; }
+        </style>
+        
+        <div class="seal">🎓</div>
+        
+        <div class="certificate-title">PIAGAM PENGHARGAAN</div>
+        <div class="certificate-subtitle">Sertifikat Prestasi Akademik</div>
+        
+        <div style="margin: 40px 0;">
+          <div class="certificate-text">Diberikan kepada</div>
+          <div class="certificate-name">${name}</div>
+        </div>
+        
+        <div style="margin: 30px 0;">
+          <div class="certificate-text">
+            Atas keberhasilannya mengikuti dan menyelesaikan<br>
+            <strong>KUIS HOTS PENYAJIAN DATA</strong><br>
+            Matematika Kelas VII - MTs Ma'arif Jumo
+          </div>
+        </div>
+        
+        <div class="certificate-score">
+          Nilai: ${percent}% (${score}/15 Soal)
+        </div>
+        
+        <div style="margin: 30px 0; display: flex; justify-content: space-around; padding: 0 40px;">
+          <div style="text-align: center;">
+            <div style="height: 60px;"></div>
+            <div style="border-top: 2px solid #333; font-size: 12px; margin-top: 10px; color: #666;">Khabib Susanto, S.Pd<br><span style="font-size: 10px;">Guru Pengampu</span></div>
+          </div>
+          <div style="text-align: center; font-size: 14px; color: #666;">
+            ${date}
+          </div>
+          <div style="text-align: center;">
+            <div class="seal" style="font-size: 40px; margin: 0;">⭐</div>
+            <div style="border-top: 2px solid #333; font-size: 12px; margin-top: 10px; color: #666;">MTs Ma'arif Jumo</div>
+          </div>
+        </div>
+        
+        <div class="certificate-footer" style="margin-top: 40px;">
+          Semoga dapat memotivasi untuk terus belajar dan berkembang
+        </div>
+      </div>
+    `;
+
+    document.getElementById('certificateContent').innerHTML = certificateHTML;
+    document.getElementById('certificateModal').classList.remove('hidden');
+  }
+
+  function closeCertificate() {
+    document.getElementById('certificateModal').classList.add('hidden');
+  }
+
+  function printCertificate() {
+    const name = document.getElementById('studentName').value;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Piagam ${name}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400&display=swap" rel="stylesheet">
+        <style>
+          body { margin: 0; padding: 20px; background: white; }
+          .certificate-title { font-family: 'Playfair Display', serif; font-size: 48px; color: #8b4513; margin: 20px 0; text-align: center; }
+          .certificate-subtitle { font-family: 'Crimson Text', serif; font-size: 24px; color: #666; text-align: center; }
+          .certificate-name { font-family: 'Playfair Display', serif; font-size: 36px; color: #2c5f7c; margin: 30px 0; text-decoration: underline; text-align: center; }
+          .certificate-text { font-family: 'Crimson Text', serif; font-size: 18px; color: #333; line-height: 1.8; margin: 15px 0; text-align: center; }
+          .certificate-score { font-family: 'Playfair Display', serif; font-size: 28px; color: #d4a574; margin: 20px 0; text-align: center; }
+          .seal { font-size: 60px; text-align: center; margin: 20px 0; }
+          .footer-row { display: flex; justify-content: space-around; margin-top: 40px; }
+          .footer-item { text-align: center; flex: 1; }
+          .signature-line { border-top: 2px solid #333; margin-top: 10px; padding-top: 5px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div style="border: 8px solid #d4a574; padding: 40px; background: linear-gradient(135deg, #fffacd 0%, #ffe4b5 100%);">
+          <div class="seal">🎓</div>
+          <div class="certificate-title">PIAGAM PENGHARGAAN</div>
+          <div class="certificate-subtitle">Sertifikat Prestasi Akademik</div>
+          <div style="margin: 40px 0;">
+            <div class="certificate-text">Diberikan kepada</div>
+            <div class="certificate-name">${name}</div>
+          </div>
+          <div style="margin: 30px 0;">
+            <div class="certificate-text">
+              Atas keberhasilannya mengikuti dan menyelesaikan<br>
+              <strong>KUIS HOTS PENYAJIAN DATA</strong><br>
+              Matematika Kelas VII - MTs Ma'arif Jumo
+            </div>
+          </div>
+          <div class="certificate-score">
+            Nilai: ${Math.round((score / 15) * 100)}% (${score}/15 Soal)
+          </div>
+          <div class="footer-row">
+            <div class="footer-item">
+              <div style="height: 60px;"></div>
+              <div class="signature-line">Khabib Susanto, S.Pd<br><span style="font-size: 10px;">Guru Pengampu</span></div>
+            </div>
+            <div style="text-align: center; font-size: 14px; color: #666;">
+              ${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </div>
+            <div class="footer-item">
+              <div style="font-size: 40px; margin: 0; text-align: center;">⭐</div>
+              <div class="signature-line">MTs Ma'arif Jumo</div>
+            </div>
+          </div>
+          <div style="text-align: center; font-size: 12px; color: #666; margin-top: 40px;">
+            Semoga dapat memotivasi untuk terus belajar dan berkembang
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => printWindow.print(), 250);
+  }
+
+  function downloadCertificate() {
+    const name = document.getElementById('studentName').value;
+    const canvas = document.createElement('canvas');
+    canvas.width = 1000;
+    canvas.height = 700;
+    const ctx = canvas.getContext('2d');
+
+    // Background gradient
+    const grad = ctx.createLinearGradient(0, 0, 1000, 700);
+    grad.addColorStop(0, '#fffacd');
+    grad.addColorStop(1, '#ffe4b5');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1000, 700);
+
+    // Border
+    ctx.strokeStyle = '#d4a574';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(5, 5, 990, 690);
+
+    // Title
+    ctx.font = 'bold 60px "Playfair Display", serif';
+    ctx.fillStyle = '#8b4513';
+    ctx.textAlign = 'center';
+    ctx.fillText('PIAGAM PENGHARGAAN', 500, 80);
+
+    // Subtitle
+    ctx.font = '32px "Crimson Text", serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText('Sertifikat Prestasi Akademik', 500, 130);
+
+    // Name label
+    ctx.font = '24px "Crimson Text", serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Diberikan kepada', 500, 200);
+
+    // Name
+    ctx.font = 'bold 48px "Playfair Display", serif';
+    ctx.fillStyle = '#2c5f7c';
+    ctx.fillText(name, 500, 280);
+
+    // Underline name
+    ctx.strokeStyle = '#2c5f7c';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(200, 295);
+    ctx.lineTo(800, 295);
+    ctx.stroke();
+
+    // Certificate text
+    ctx.font = '20px "Crimson Text", serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Atas keberhasilannya mengikuti dan menyelesaikan', 500, 360);
+    ctx.font = 'bold 20px "Crimson Text", serif';
+    ctx.fillText('KUIS HOTS PENYAJIAN DATA', 500, 390);
+    ctx.font = '20px "Crimson Text", serif';
+    ctx.fillText('Matematika Kelas VII - MTs Ma\'arif Jumo', 500, 420);
+
+    // Score
+    const percent = Math.round((score / 15) * 100);
+    ctx.font = 'bold 36px "Playfair Display", serif';
+    ctx.fillStyle = '#d4a574';
+    ctx.fillText(`Nilai: ${percent}% (${score}/15 Soal)`, 500, 490);
+
+    // Footer signatures
+    ctx.font = '14px "Crimson Text", serif';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'center';
+    
+    // Left - Teacher
+    ctx.fillText('Khabib Susanto, S.Pd', 200, 600);
+    ctx.font = '11px "Crimson Text", serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText('Guru Pengampu', 200, 625);
+    
+    // Center - Date
+    ctx.font = '13px "Crimson Text", serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText(date, 500, 615);
+    
+    // Right - School
+    ctx.font = '14px "Crimson Text", serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('⭐', 800, 580);
+    ctx.font = '12px "Crimson Text", serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText('MTs Ma\'arif Jumo', 800, 625);
+
+    // Download
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `Piagam_${name.replace(/\s+/g, '_')}.png`;
+    link.click();
+  }
+
+  // Element SDK
+  const defaultConfig = {
+    school_name: 'MTs Ma\'arif Jumo',
+    main_title: 'Kuis HOTS Penyajian Data',
+    background_color: '#0f2027',
+    surface_color: '#1e3a5f',
+    text_color: '#ffffff',
+    primary_action_color: '#0284c7',
+    secondary_action_color: '#7dd3fc',
+    font_family: 'Plus Jakarta Sans',
+    font_size: 16
+  };
+
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      document.getElementById('schoolName').textContent = config.school_name || defaultConfig.school_name;
+      document.getElementById('mainTitle').textContent = config.main_title || defaultConfig.main_title;
+      const font = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${font}, sans-serif`;
+      const size = config.font_size || defaultConfig.font_size;
+      document.body.style.fontSize = size + 'px';
+    },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }},
+        { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }},
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }},
+        { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }},
+        { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }}
+      ],
+      borderables: [],
+      fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }},
+      fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }}
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['school_name', config.school_name || defaultConfig.school_name],
+      ['main_title', config.main_title || defaultConfig.main_title]
+    ])
+  });
+
+  lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f64015833655f2b',t:'MTc3Nzg2MTAwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
